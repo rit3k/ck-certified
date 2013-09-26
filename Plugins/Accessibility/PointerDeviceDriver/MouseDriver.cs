@@ -124,11 +124,11 @@ namespace PointerDeviceDriver
 
             //Versions above Vista unhook the mousehook as soon as there is a CPU overload. So we must use a simple timer to get the cursor position
             //We still use the mousehook to process the mouse clicks, which are less heavy to process
-            if( CK.Core.OSVersionInfo.OSLevel >= CK.Core.OSVersionInfo.SimpleOSLevel.WindowsVista )
-            {
-                _pointerPositionViaTimer = true;
-                _pointerPosGetter = new SimpleDispatchTimerWrapper( new TimeSpan( 150000 ), GetCurrentPointerPos );
-            }
+            //if( CK.Core.OSVersionInfo.OSLevel >= CK.Core.OSVersionInfo.SimpleOSLevel.WindowsVista )
+            //{
+            //    _pointerPositionViaTimer = true;
+            //    _pointerPosGetter = new SimpleDispatchTimerWrapper( new TimeSpan( 150000 ), GetCurrentPointerPos );
+            //}
 
             // We look if we can set the Low Level Mouse Hook 
             string message;
