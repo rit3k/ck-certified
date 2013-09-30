@@ -10,13 +10,15 @@
         ShowInTaskbar="False"
         AllowsTransparency="True"
         Background="Transparent" 
-        Topmost="True">
+        Topmost="True" >
     
-    <StackPanel Background="RosyBrown">
-        <Rectangle Stroke="Red"  StrokeThickness="2" Width="100" Height="100" Margin="0,25,0,0">
-            <Rectangle.RenderTransform>
-                <RotateTransform CenterX="50" CenterY="50" Angle="{Binding  Path=Angle}" />
-            </Rectangle.RenderTransform>
-        </Rectangle>
-    </StackPanel>
+    <Canvas>
+        <Ellipse Stroke="Red" StrokeThickness="2" Width="130" Height="130" Margin="10,10,0,0">
+        </Ellipse>
+        <Ellipse Stroke="Black" Fill="AliceBlue"  StrokeThickness="2" Width="20" Height="20" Canvas.Left="128" Canvas.Top="65">
+            <Ellipse.RenderTransform>
+                <RotateTransform CenterX="-53" CenterY="10" Angle="{Binding Path=Angle}" />
+            </Ellipse.RenderTransform>
+        </Ellipse>
+    </Canvas>
 </Window>
