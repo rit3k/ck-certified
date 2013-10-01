@@ -42,29 +42,49 @@ namespace MouseRadar
         {
             _radar = new Radar( MouseDriver.Service );
 
-            ExternalInput.Service.Triggered +=  (o, e) => {
-                _radar.StartTranslation();
-            };
-            MouseDriver.Service.PointerButtonUp += ( o, e ) =>
-            {
-                _radar.StartTranslation();
-            };
+            ExternalInput.Service.Triggered += TranslateRadar;
+            MouseDriver.Service.PointerButtonUp += TranslateRadar;
+
             _radar.ScreenBoundCollide += ( o, e ) => {
-                _radar.StopTranslation();
+                
                 switch( e.ScreenBound )
                 {
                     case ScreenBound.Left :
+                        _radar.Model.AngleMin = 270;
+                        _radar.Model.AngleMax = 90;
+                        break;
+                    case ScreenBound.Top:
+                        _radar.Model.AngleMin = 0;
+                        _radar.Model.AngleMax = 180;
+                        break;
+                    case ScreenBound.Right:
+                        _radar.Model.AngleMin = 90;
+                        _radar.Model.AngleMax = 270;
+                        break;
+                    case ScreenBound.Bottom:
+                        _radar.Model.AngleMin = 90;
+                        _radar.Model.AngleMax = 360;
+                        break;
+                    default :
+                        _radar.Model.AngleMin = 0;
+                        _radar.Model.AngleMax = 360;
                         break;
                 }
+                if( e.ScreenBound != ScreenBound.None ) _radar.StopTranslation();
             };
             
             _radar.StartRotation();
             _radar.Show();
         }
-
+        void TranslateRadar(object o, EventArgs e)
+        {
+            _radar.StartTranslation();
+        }
         public void Stop()
         {
-
+            _radar.Dispose();
+            MouseDriver.Service.PointerButtonUp -= TranslateRadar;
+            ExternalInput.Service.Triggered -= TranslateRadar;
         }
 
         public void Teardown()

@@ -13,7 +13,7 @@
         Topmost="True" >
     
     <Canvas>
-        <Ellipse Stroke="Red" StrokeThickness="2" Width="130" Height="130" Margin="10,10,0,0">
+        <Ellipse Stroke="{Binding Path=CircleColor}" StrokeThickness="2" Width="130" Height="130" Margin="10,10,0,0">
         </Ellipse>
         <Ellipse Stroke="Black" Fill="AliceBlue"  StrokeThickness="2" Width="20" Height="20" Canvas.Left="128" Canvas.Top="65">
             <Ellipse.RenderTransform>

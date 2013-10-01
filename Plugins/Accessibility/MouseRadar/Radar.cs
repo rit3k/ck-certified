@@ -5,17 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Media;
 using System.Windows.Threading;
 using CommonServices;
 
 namespace MouseRadar
 {
-    public partial class Radar
+    public partial class Radar : IDisposable
     {
         IPointerDeviceDriver _mouseDriver;
         int _originX;
         int _originY;
         int _translationDirection = 1;
+        int _rotationDirection = 1;
+        ScreenBound _previousCollision = ScreenBound.None;
         DispatcherTimer _timerRotate;
         DispatcherTimer _timerTranslate;
         public event EventHandler<ScreenBoundCollideEventArgs> ScreenBoundCollide;
@@ -27,8 +30,11 @@ namespace MouseRadar
         public Radar(IPointerDeviceDriver pdd) : this()
         {
             Model = new RadarViewModel();
+            Model.SetCircleColor( 255, 0, 0, 0 );
             DataContext = Model;
             _mouseDriver = pdd;
+            Left = pdd.CurrentPointerXLocation;
+            Top = pdd.CurrentPointerYLocation;
             RotationSpeed = 1; 
             TranslationSpeed = 1;
 
@@ -41,16 +47,9 @@ namespace MouseRadar
 
             _timerTranslate = new DispatcherTimer( DispatcherPriority.Send );
             _timerTranslate.Interval = new TimeSpan( 10000 * 17 ); //60 fps
-            _timerTranslate.Tick += ( o, e ) =>
-            {
-                var p = GetTranslation( _mouseDriver.CurrentPointerXLocation + TranslationSpeed * _translationDirection );
-                if( CheckBoundCollision( p ) == ScreenBound.None)
-                    _mouseDriver.MovePointer( (int)p.X, (int)p.Y );
-            };
+            _timerTranslate.Tick += ProcessTranslation;
 
-            _mouseDriver.PointerMove += (o, e) => {
-                UpdateLocation( e.X, e.Y );
-            };
+            _mouseDriver.PointerMove += UpdateLocation;
         }
 
         private ScreenBound CheckBoundCollision( Point p )
@@ -61,8 +60,43 @@ namespace MouseRadar
             if( p.Y <= Screen.PrimaryScreen.Bounds.Top ) collision = ScreenBound.Top;
             if( p.Y >= Screen.PrimaryScreen.Bounds.Bottom ) collision = ScreenBound.Bottom;
 
-            if( collision != ScreenBound.None ) FireScreenBoundCollide( collision );
             return collision;
+        }
+
+        void ProcessTranslation(object sender, EventArgs e)
+        {
+            int moveX = _mouseDriver.CurrentPointerXLocation;
+            int moveY = _mouseDriver.CurrentPointerYLocation;
+
+            var p = GetTranslation( moveX, moveY );
+            ScreenBound collision = CheckBoundCollision( p );
+            switch( collision )
+            {
+                default:
+                    moveX = (int)p.X;
+                    moveY = (int)p.Y;
+                    break;
+                case ScreenBound.Left:
+                    moveX = 0;
+                    moveY = (int)p.Y;
+                    
+                    break;
+                case ScreenBound.Top:
+                    moveY = 0;
+                    moveX = (int)p.X;
+                    break;
+                case ScreenBound.Right:
+                    moveX = Screen.PrimaryScreen.Bounds.Right;
+                    moveY = (int)p.Y;
+                    break;
+                case ScreenBound.Bottom:
+                    moveY = Screen.PrimaryScreen.Bounds.Bottom;
+                    moveX = (int)p.X;
+                    break;
+            }
+
+            if( collision != ScreenBound.None ) FireScreenBoundCollide( collision );
+            _mouseDriver.MovePointer( moveX, moveY ); 
         }
 
         public void StartRotation()
@@ -94,25 +128,43 @@ namespace MouseRadar
             if( startRotation ) _timerRotate.Start();
         }
 
-        public void UpdateLocation( int x, int y )
+        public void UpdateLocation( object sender, PointerDeviceEventArgs e )
         {
-            Left = x - Width / 2;
-            Top = y - Height / 2;
+            Left = e.X - Width / 2;
+            Top = e.Y - Height / 2;
+
+            if( _previousCollision != ScreenBound.None && CheckBoundCollision( new Point(e.X, e.Y) ) == ScreenBound.None ) 
+                FireScreenBoundCollide(ScreenBound.None);
         }
 
-        Point GetTranslation( int x )
+        Point GetTranslation( int x, int y )
         {
-            int xp = x - _originX;       //Place the coordinate system to the click zone
-            double yp = Slope * xp;     //Equation y= ax + b with b = 0
+            double b = _originY - Slope * _originX; //Compute the origine
+            int xp = x + TranslationSpeed * _translationDirection; //move x
+            double yp = Slope * xp + b; //get y= ax + b
 
-            return new Point( x, yp + _originY ); //Get the computed screen coordinates
+            return new Point( xp,  yp );
         }
 
         void FireScreenBoundCollide(ScreenBound bound)
         {
+            Console.WriteLine("Colision : " + bound);
+            _previousCollision = bound;
             if( ScreenBoundCollide != null ) 
                 ScreenBoundCollide(this, new ScreenBoundCollideEventArgs(bound));
         }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            _timerRotate.Stop();
+            _timerTranslate.Stop();
+            _mouseDriver.PointerMove -= UpdateLocation;
+            this.Close();
+        }
+
+        #endregion
     }
 
     [Flags]
@@ -138,17 +190,46 @@ namespace MouseRadar
     public class RadarViewModel : INotifyPropertyChanged
     {
         float _angle;
+        SolidColorBrush _circleColor;
+        int _radarSize;
+
+        public float AngleMin { get; set; }
+        public float AngleMax { get; set; }
+
+        public int RadarSize
+        {
+            get { return _radarSize; }
+            set
+            {
+                _radarSize = value;
+                FirePropertyChanged( "RadarSize" );
+            }
+        }
+        public SolidColorBrush CircleColor
+        {
+            get { return _circleColor; }
+            set
+            {
+                _circleColor = value;
+                FirePropertyChanged( "CircleColor" );
+            }
+        }
 
         public float Angle
         {
             get { return _angle; }
             set
             {
-                if( value >= 360 ) _angle = value - 360;
-                else if( value < 0 ) _angle = value + 360;
+                if( value >= AngleMax ) _angle = value - AngleMax + AngleMin;
+                else if( value < AngleMax ) _angle = value + AngleMax;
                 else _angle = value;
                 FirePropertyChanged( "Angle" );
             }
+        }
+
+        public void SetCircleColor( int a, int r, int g, int b )
+        {
+            CircleColor = new SolidColorBrush( Color.FromArgb( (byte)a, (byte)r, (byte)g, (byte) b ) );//Color.FromArgb( a, r, g, b ) );
         }
 
         #region INotifyPropertyChanged Members
