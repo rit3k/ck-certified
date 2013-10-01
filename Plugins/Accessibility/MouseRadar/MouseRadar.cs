@@ -23,7 +23,6 @@ namespace MouseRadar
         const string PluginPublicName = "MouseRadar";
         
         Radar _radar;
-
         
         [DynamicService( Requires = RunningRequirement.MustExistAndRun )]
         public IService<IPointerDeviceDriver> MouseDriver { get; set; }
@@ -76,10 +75,13 @@ namespace MouseRadar
             _radar.StartRotation();
             _radar.Show();
         }
+
         void TranslateRadar(object o, EventArgs e)
         {
-            _radar.StartTranslation();
+            if(_radar.IsTranslating()) _radar.StopTranslation();
+            else _radar.StartTranslation();
         }
+
         public void Stop()
         {
             _radar.Dispose();
@@ -94,6 +96,4 @@ namespace MouseRadar
 
         #endregion
     }
-
-    
 }

@@ -78,6 +78,7 @@
       <DependentUpon>Radar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Radar.cs" />
+    <Compile Include="RadarViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

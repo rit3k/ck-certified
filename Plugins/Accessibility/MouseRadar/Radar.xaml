@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         mc:Ignorable="d" 
-        Height="150" Width="150"
+        Height="{Binding Path=WindowSize}" Width="{Binding Path=WindowSize}"
         WindowStartupLocation="Manual"
         WindowStyle="None" 
         ShowInTaskbar="False"
@@ -12,13 +12,13 @@
         Background="Transparent" 
         Topmost="True" >
     
-    <Canvas>
-        <Ellipse Stroke="{Binding Path=CircleColor}" StrokeThickness="2" Width="130" Height="130" Margin="10,10,0,0">
+    <Canvas Margin="11">
+        <Ellipse Stroke="{Binding Path=CircleColor}" StrokeThickness="2" Width="{Binding Path=RadarSize}" Height="{Binding Path=RadarSize}">
         </Ellipse>
-        <Ellipse Stroke="Black" Fill="AliceBlue"  StrokeThickness="2" Width="20" Height="20" Canvas.Left="128" Canvas.Top="65">
-            <Ellipse.RenderTransform>
-                <RotateTransform CenterX="-53" CenterY="10" Angle="{Binding Path=Angle}" />
-            </Ellipse.RenderTransform>
-        </Ellipse>
+        <Rectangle Stroke="Black" Fill="AliceBlue"  StrokeThickness="2" Width="20" Height="20" Canvas.Left="{Binding Path=PointerPositionX}" Canvas.Top="{Binding Path=PointerPositionY}">
+            <Rectangle.RenderTransform>
+                <RotateTransform CenterX="{Binding Path=RotationOriginX}" CenterY="{Binding Path=RotationOriginY}" Angle="{Binding Path=Angle}" />
+            </Rectangle.RenderTransform>
+        </Rectangle>
     </Canvas>
 </Window>

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Threading;
 using CommonServices;
-
+using System.Drawing.Drawing2D;
 namespace MouseRadar
 {
     public partial class Radar : IDisposable
@@ -18,11 +18,13 @@ namespace MouseRadar
         int _originY;
         int _translationDirection = 1;
         int _rotationDirection = 1;
+        int _rayon;
+
         ScreenBound _previousCollision = ScreenBound.None;
         DispatcherTimer _timerRotate;
         DispatcherTimer _timerTranslate;
         public event EventHandler<ScreenBoundCollideEventArgs> ScreenBoundCollide;
-        public double Slope { get; private set; }
+        public double Radian { get; private set; }
         public int RotationSpeed { get; set; }
         public int TranslationSpeed { get; set; }
         public RadarViewModel Model { get; private set; }
@@ -31,6 +33,7 @@ namespace MouseRadar
         {
             Model = new RadarViewModel();
             Model.SetCircleColor( 255, 0, 0, 0 );
+            Model.RadarSize = 200;
             DataContext = Model;
             _mouseDriver = pdd;
             Left = pdd.CurrentPointerXLocation;
@@ -103,7 +106,10 @@ namespace MouseRadar
         {
             _timerRotate.Start();
         }
-
+        public bool IsTranslating()
+        {
+            return _timerTranslate.IsEnabled;
+        }
         public void EndRotation()
         {
             _timerRotate.Stop();
@@ -113,11 +119,9 @@ namespace MouseRadar
         {
             _originX =  _mouseDriver.CurrentPointerXLocation;
             _originY = _mouseDriver.CurrentPointerYLocation;
+            Radian = Model.Angle / 180 * Math.PI;
+            _rayon = 0;
 
-            double rad = Model.Angle / 180 * Math.PI;
-            Slope = Math.Tan( rad ); //Slope => pente
-
-            _translationDirection = Math.Sign( Math.Cos( rad ) );
             _timerRotate.Stop();
             _timerTranslate.Start();
         }
@@ -130,8 +134,8 @@ namespace MouseRadar
 
         public void UpdateLocation( object sender, PointerDeviceEventArgs e )
         {
-            Left = e.X - Width / 2;
-            Top = e.Y - Height / 2;
+            Left = e.X - Model.WindowSize / 2;
+            Top = e.Y - Model.WindowSize / 2;
 
             if( _previousCollision != ScreenBound.None && CheckBoundCollision( new Point(e.X, e.Y) ) == ScreenBound.None ) 
                 FireScreenBoundCollide(ScreenBound.None);
@@ -139,11 +143,10 @@ namespace MouseRadar
 
         Point GetTranslation( int x, int y )
         {
-            double b = _originY - Slope * _originX; //Compute the origine
-            int xp = x + TranslationSpeed * _translationDirection; //move x
-            double yp = Slope * xp + b; //get y= ax + b
 
-            return new Point( xp,  yp );
+            double rad = Model.Angle / 180 * Math.PI;
+            _rayon += TranslationSpeed;
+            return new Point( _originX + _rayon * Math.Cos( rad ), _originY + _rayon * Math.Sin( rad ) );
         }
 
         void FireScreenBoundCollide(ScreenBound bound)
@@ -184,63 +187,6 @@ namespace MouseRadar
         public ScreenBoundCollideEventArgs(ScreenBound b)
         {
             ScreenBound = b;
-        }
-    }
-
-    public class RadarViewModel : INotifyPropertyChanged
-    {
-        float _angle;
-        SolidColorBrush _circleColor;
-        int _radarSize;
-
-        public float AngleMin { get; set; }
-        public float AngleMax { get; set; }
-
-        public int RadarSize
-        {
-            get { return _radarSize; }
-            set
-            {
-                _radarSize = value;
-                FirePropertyChanged( "RadarSize" );
-            }
-        }
-        public SolidColorBrush CircleColor
-        {
-            get { return _circleColor; }
-            set
-            {
-                _circleColor = value;
-                FirePropertyChanged( "CircleColor" );
-            }
-        }
-
-        public float Angle
-        {
-            get { return _angle; }
-            set
-            {
-                if( value >= AngleMax ) _angle = value - AngleMax + AngleMin;
-                else if( value < AngleMax ) _angle = value + AngleMax;
-                else _angle = value;
-                FirePropertyChanged( "Angle" );
-            }
-        }
-
-        public void SetCircleColor( int a, int r, int g, int b )
-        {
-            CircleColor = new SolidColorBrush( Color.FromArgb( (byte)a, (byte)r, (byte)g, (byte) b ) );//Color.FromArgb( a, r, g, b ) );
-        }
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
-
-        protected void FirePropertyChanged( string propertyName )
-        {
-            if( PropertyChanged != null ) PropertyChanged( this, new PropertyChangedEventArgs( propertyName ) );
         }
     }
 }
