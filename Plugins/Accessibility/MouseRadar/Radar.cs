@@ -33,6 +33,8 @@ namespace MouseRadar
         {
             Model = new RadarViewModel();
             Model.SetCircleColor( 255, 0, 0, 0 );
+            Model.SetArrowColor( 255, 0, 0, 0 );
+            Model.Opacity = 1;
             Model.RadarSize = 100;
             DataContext = Model;
             _mouseDriver = pdd;
@@ -57,11 +59,13 @@ namespace MouseRadar
 
         private ScreenBound CheckBoundCollision( Point p )
         {
+            Screen current = Screen.FromPoint( new System.Drawing.Point( (int)p.X, (int)p.Y ) );
+
             ScreenBound collision = ScreenBound.None;
-            if( p.X <= Screen.PrimaryScreen.Bounds.Left ) collision = ScreenBound.Left;
-            if( p.X >= Screen.PrimaryScreen.Bounds.Right ) collision = ScreenBound.Right;
-            if( p.Y <= Screen.PrimaryScreen.Bounds.Top ) collision = ScreenBound.Top;
-            if( p.Y >= Screen.PrimaryScreen.Bounds.Bottom ) collision = ScreenBound.Bottom;
+            if( p.X <= current.Bounds.Left ) collision = ScreenBound.Left;
+            if( p.X >= current.Bounds.Right ) collision = ScreenBound.Right;
+            if( p.Y <= current.Bounds.Top ) collision = ScreenBound.Top;
+            if( p.Y >= current.Bounds.Bottom ) collision = ScreenBound.Bottom;
 
             return collision;
         }
@@ -70,8 +74,9 @@ namespace MouseRadar
         {
             int moveX = _mouseDriver.CurrentPointerXLocation;
             int moveY = _mouseDriver.CurrentPointerYLocation;
-
             var p = GetTranslation( moveX, moveY );
+            Screen curScreen = Screen.FromPoint( new System.Drawing.Point( (int)p.X, (int)p.Y ) );
+
             ScreenBound collision = CheckBoundCollision( p );
             switch( collision )
             {
@@ -82,18 +87,17 @@ namespace MouseRadar
                 case ScreenBound.Left:
                     moveX = 0;
                     moveY = (int)p.Y;
-                    
                     break;
                 case ScreenBound.Top:
                     moveY = 0;
                     moveX = (int)p.X;
                     break;
                 case ScreenBound.Right:
-                    moveX = Screen.PrimaryScreen.Bounds.Right;
+                    moveX = curScreen.Bounds.Right;
                     moveY = (int)p.Y;
                     break;
                 case ScreenBound.Bottom:
-                    moveY = Screen.PrimaryScreen.Bounds.Bottom;
+                    moveY = curScreen.Bounds.Bottom;
                     moveX = (int)p.X;
                     break;
             }
@@ -136,6 +140,7 @@ namespace MouseRadar
         {
             Left = e.X - Model.WindowSize / 2;
             Top = e.Y - Model.WindowSize / 2;
+            Console.WriteLine("Location  {0}, {1}", e.X, e.Y);
 
             if( _previousCollision != ScreenBound.None && CheckBoundCollision( new Point(e.X, e.Y) ) == ScreenBound.None ) 
                 FireScreenBoundCollide(ScreenBound.None);
@@ -152,6 +157,7 @@ namespace MouseRadar
         void FireScreenBoundCollide(ScreenBound bound)
         {
             Console.WriteLine("Colision : " + bound);
+
             _previousCollision = bound;
             if( ScreenBoundCollide != null ) 
                 ScreenBoundCollide(this, new ScreenBoundCollideEventArgs(bound));
@@ -170,7 +176,6 @@ namespace MouseRadar
         #endregion
     }
 
-    [Flags]
     public enum ScreenBound
     {
         None,
