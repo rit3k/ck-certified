@@ -101,9 +101,19 @@ namespace MouseRadar
             get { return _angle; }
             set
             {
-                if( value >= AngleMax ) _angle = value - AngleMax + AngleMin;
-                else if( value < AngleMin ) _angle = value + AngleMax;
-                else _angle = value;
+                if( AngleMin > AngleMax )
+                {
+                    if( value >= AngleMax && value <= AngleMin) _angle = value - AngleMax + AngleMin;
+                    else if( value >= 360 ) _angle = value - 360;
+                    else _angle = value;
+                }
+                else
+                {
+                    if( value >= AngleMax ) _angle = value - AngleMax + AngleMin;
+                    else if( value < AngleMin ) _angle = value + AngleMax;
+                    else _angle = value;
+                }
+                
                 FirePropertyChanged( "Angle" );
             }
         }
