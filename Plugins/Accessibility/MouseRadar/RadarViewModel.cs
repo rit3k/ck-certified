@@ -33,27 +33,27 @@ namespace MouseRadar
 
         public int WindowSize
         {
-            get { return RadarSize + 22; }
+            get { return RadarSize + 16; }
         }
 
         public int PointerPositionY
         {
-            get { return RadarSize / 2 - 11; }
+            get { return RadarSize / 2 - 8; }
         }
 
         public int PointerPositionX
         {
-            get { return RadarSize - 11; }
+            get { return RadarSize - 8; }
         }
 
         public int RotationOriginX
         {
-            get { return -RadarSize / 2 + 11; }
+            get { return -RadarSize / 2 + 8; }
         }
 
         public int RotationOriginY
         {
-            get { return 11; }
+            get { return 8; }
         }
 
         public SolidColorBrush CircleColor

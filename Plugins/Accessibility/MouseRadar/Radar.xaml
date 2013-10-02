@@ -9,16 +9,18 @@
         WindowStyle="None" 
         ShowInTaskbar="False"
         AllowsTransparency="True"
-        Background="Transparent" 
+        Background="AliceBlue" 
         Topmost="True" >
     
-    <Canvas Margin="11">
+    <Canvas Margin="10, 10">
+       
         <Ellipse Stroke="{Binding Path=CircleColor}" StrokeThickness="2" Width="{Binding Path=RadarSize}" Height="{Binding Path=RadarSize}">
         </Ellipse>
-        <Rectangle Stroke="Black" Fill="AliceBlue"  StrokeThickness="2" Width="20" Height="20" Canvas.Left="{Binding Path=PointerPositionX}" Canvas.Top="{Binding Path=PointerPositionY}">
-            <Rectangle.RenderTransform>
+        <Polygon Points="14,0 29,10, 14,20" Stroke="Black" Fill="AliceBlue"  StrokeThickness="2" Canvas.Left="{Binding Path=PointerPositionX}" Canvas.Top="{Binding Path=PointerPositionY}">
+            <Polygon.RenderTransform>
                 <RotateTransform CenterX="{Binding Path=RotationOriginX}" CenterY="{Binding Path=RotationOriginY}" Angle="{Binding Path=Angle}" />
-            </Rectangle.RenderTransform>
-        </Rectangle>
+            </Polygon.RenderTransform>
+        </Polygon>
+       
     </Canvas>
 </Window>

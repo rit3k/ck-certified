@@ -33,7 +33,7 @@ namespace MouseRadar
         {
             Model = new RadarViewModel();
             Model.SetCircleColor( 255, 0, 0, 0 );
-            Model.RadarSize = 200;
+            Model.RadarSize = 100;
             DataContext = Model;
             _mouseDriver = pdd;
             Left = pdd.CurrentPointerXLocation;
