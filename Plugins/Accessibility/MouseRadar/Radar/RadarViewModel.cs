@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Media;
+using CK.Context;
 
 namespace MouseRadar
 {
@@ -18,15 +20,16 @@ namespace MouseRadar
         float _opacity;
         public float AngleMin { get; set; }
         public float AngleMax { get; set; }
+        public Point ScreenScale { get; set; }
 
         public RadarViewModel()
         {
             _opacity = 1;
             AngleMin = 0;
             AngleMax = 360;
-
+            ScreenScale = new Point();
         }
-
+        
         public float Opacity
         {
             get { return _opacity; }
@@ -68,7 +71,7 @@ namespace MouseRadar
 
         public int RotationOriginX
         {
-            get { return -RadarSize / 2 + ARROW_LENGTH / 2; }
+            get { return -  RadarSize / 2 + ARROW_LENGTH / 2; }
         }
 
         public int RotationOriginY
@@ -118,14 +121,14 @@ namespace MouseRadar
             }
         }
 
-        public void SetCircleColor( int a, int r, int g, int b )
+        public void SetCircleColor( Color c )
         {
-            CircleColor = new SolidColorBrush( Color.FromArgb( (byte)a, (byte)r, (byte)g, (byte)b ) ); //Color.FromArgb( a, r, g, b ) );
+            CircleColor = new SolidColorBrush( c ); //Color.FromArgb( a, r, g, b ) );
         }
 
-        public void SetArrowColor( int a, int r, int g, int b )
+        public void SetArrowColor( Color c )
         {
-            ArrowColor = new SolidColorBrush( Color.FromArgb( (byte)a, (byte)r, (byte)g, (byte)b ) ); //Color.FromArgb( a, r, g, b ) );
+            ArrowColor = new SolidColorBrush(c); //Color.FromArgb( a, r, g, b ) );
         }
 
         #region INotifyPropertyChanged Members

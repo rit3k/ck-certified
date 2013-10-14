@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="TextTemplate.Views.Template"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+     
+        d:DesignHeight="300" d:DesignWidth="300">
+    
+    <WrapPanel >
+        
+        <TextBlock>sdvsdv</TextBlock>
+        <TextBlock>sdvsd v</TextBlock>
+        <TextBlock>sdvsdv</TextBlock>
+        <TextBlock>sdvsdv</TextBlock>
+        <TextBlock>sdv
+            sdv</TextBlock>
+        <TextBlock>sdvsd v</TextBlock>
+        <TextBlock>sd vsdv</TextBlock>
+        <TextBlock>sdvsdv</TextBlock>
+        <TextBlock>sdvsdv</TextBlock>
+        <TextBlock>sdvsdv</TextBlock>
+        <TextBlock>sdvsdv</TextBlock>
+        <TextBlock>sdv sdv</TextBlock>
+        <TextBlock>sdv sdv</TextBlock>
+        <TextBlock>sdvsdv</TextBlock>
+        <TextBlock>sdvsdv</TextBlock>
+        <TextBlock>sdvsd v</TextBlock>
+        <TextBlock>sdv sdv</TextBlock>
+        <TextBox>azdazd</TextBox>
+    </WrapPanel>
+</UserControl>
