@@ -14,10 +14,10 @@ using MouseRadar.Resources;
 
 namespace MouseRadar.Editor
 {
-    public class EditorModel : Screen
+    public class EditorViewModel : Screen
     {
         IPluginConfigAccessor _config;
-        public EditorModel( IPluginConfigAccessor conf )
+        public EditorViewModel( IPluginConfigAccessor conf )
         {
             _config = conf;
         }

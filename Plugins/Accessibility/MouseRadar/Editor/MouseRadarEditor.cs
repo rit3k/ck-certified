@@ -22,8 +22,8 @@ namespace MouseRadar.Editor
         const string PluginIdVersion = "1.0.0";
         const string PluginPublicName = "Radar Editor";
 
-        Editor _view;
-        EditorModel _editor;
+        EditorView _view;
+        EditorViewModel _editor;
         [ConfigurationAccessor( MouseRadar.PluginIdString )]
         public IPluginConfigAccessor Configuration { get; set; }
 
@@ -46,15 +46,15 @@ namespace MouseRadar.Editor
         public void Start()
         {
             IWindowManager wnd = IoC.Get<WindowManager>();
-            _editor = new EditorModel( Configuration ) { Context = Context };
-            _view = new Editor()
-            {
-                DataContext = _editor
-            };
+            _editor = new EditorViewModel( Configuration ) { Context = Context };
+            //_view = new Editor()
+            //{
+            //    DataContext = _editor
+            //};
 
-            _view.Show();
+            //_view.Show();
 
-            //wnd.ShowWindow( _editor );
+            wnd.ShowWindow( _editor );
         }
 
         public void Stop()

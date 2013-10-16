@@ -14,12 +14,9 @@ using System.Windows.Shapes;
 
 namespace MouseRadar.Editor
 {
-    /// <summary>
-    /// Interaction logic for Editor.xaml
-    /// </summary>
-    public partial class Editor : Window
+    public partial class EditorView : Window
     {
-        public Editor()
+        public EditorView()
         {
             InitializeComponent();
         }
