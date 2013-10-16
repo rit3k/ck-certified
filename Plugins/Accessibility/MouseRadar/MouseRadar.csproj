@@ -27,7 +27,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\Output\Debug\Plugins\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -37,30 +37,37 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Caliburn.Micro.1.3.1\lib\net40\Caliburn.Micro.dll</HintPath>
     </Reference>
-    <Reference Include="CK.Context, Version=1.0.0.0, Culture=neutral, PublicKeyToken=731c291b31fb8d27, processorArchitecture=MSIL">
+    <Reference Include="CK.Context, Version=2.9.13.0, Culture=neutral, PublicKeyToken=731c291b31fb8d27, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\CK.Context.2.9.6-develop\lib\net40\CK.Context.dll</HintPath>
+      <HintPath>..\..\..\packages\CK.Context.2.9.13\lib\net40\CK.Context.dll</HintPath>
     </Reference>
-    <Reference Include="CK.Core">
-      <HintPath>..\..\..\packages\CK.Core.2.8.9-develop\lib\net40\CK.Core.dll</HintPath>
+    <Reference Include="CK.Core, Version=2.8.14.0, Culture=neutral, PublicKeyToken=731c291b31fb8d27, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\CK.Core.2.8.14\lib\net40\CK.Core.dll</HintPath>
     </Reference>
-    <Reference Include="CK.Plugin.Config">
-      <HintPath>..\..\..\packages\CK.Plugin.Config.2.9.6-develop\lib\net40\CK.Plugin.Config.dll</HintPath>
+    <Reference Include="CK.Plugin.Config, Version=2.9.13.0, Culture=neutral, PublicKeyToken=731c291b31fb8d27, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\CK.Plugin.Config.2.9.13\lib\net40\CK.Plugin.Config.dll</HintPath>
     </Reference>
-    <Reference Include="CK.Plugin.Config.Model">
-      <HintPath>..\..\..\packages\CK-Plugin.2.9.6-develop\lib\net40\CK.Plugin.Config.Model.dll</HintPath>
+    <Reference Include="CK.Plugin.Config.Model, Version=2.9.13.0, Culture=neutral, PublicKeyToken=731c291b31fb8d27, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\CK-Plugin.2.9.13\lib\net40\CK.Plugin.Config.Model.dll</HintPath>
     </Reference>
-    <Reference Include="CK.Plugin.Model">
-      <HintPath>..\..\..\packages\CK-Plugin.2.9.6-develop\lib\net40\CK.Plugin.Model.dll</HintPath>
+    <Reference Include="CK.Plugin.Model, Version=2.9.13.0, Culture=neutral, PublicKeyToken=731c291b31fb8d27, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\CK-Plugin.2.9.13\lib\net40\CK.Plugin.Model.dll</HintPath>
     </Reference>
-    <Reference Include="CK.Reflection">
-      <HintPath>..\..\..\packages\CK.Reflection.2.8.9-develop\lib\net40\CK.Reflection.dll</HintPath>
+    <Reference Include="CK.Reflection, Version=2.8.14.0, Culture=neutral, PublicKeyToken=731c291b31fb8d27, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\CK.Reflection.2.8.14\lib\net40\CK.Reflection.dll</HintPath>
     </Reference>
-    <Reference Include="CK.SharedDic">
-      <HintPath>..\..\..\packages\CK.SharedDic.2.9.7-develop\lib\net40\CK.SharedDic.dll</HintPath>
+    <Reference Include="CK.SharedDic, Version=2.9.13.0, Culture=neutral, PublicKeyToken=731c291b31fb8d27, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\CK.SharedDic.2.9.13\lib\net40\CK.SharedDic.dll</HintPath>
     </Reference>
-    <Reference Include="CK.Storage">
-      <HintPath>..\..\..\packages\CK.Storage.2.8.9-develop\lib\net40\CK.Storage.dll</HintPath>
+    <Reference Include="CK.Storage, Version=2.8.14.0, Culture=neutral, PublicKeyToken=731c291b31fb8d27, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\CK.Storage.2.8.14\lib\net40\CK.Storage.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\..\..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
@@ -100,6 +107,16 @@
     </Compile>
     <Compile Include="Radar\Radar.cs" />
     <Compile Include="Radar\RadarViewModel.cs" />
+    <Compile Include="Resources\R.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>R.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\R.fr.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>R.fr.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -128,7 +145,16 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\R.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>R.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\R.fr.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>R.fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

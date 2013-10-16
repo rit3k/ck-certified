@@ -55,7 +55,7 @@ namespace MouseRadar
             _timerTranslate.Interval = new TimeSpan( 10000 * 17 ); //60 fps
             _timerTranslate.Tick += ProcessTranslation;
 
-            _mouseDriver.PointerMove += UpdateLocation;
+            _mouseDriver.PointerMove += OnMouseLocationChanged;
             Model.PropertyChanged += ( o, e ) =>
             {
                 if( e.PropertyName == "WindowSize" )
@@ -66,11 +66,13 @@ namespace MouseRadar
             };
         }
 
+
         public void Launch()
         {
             PresentationSource source = PresentationSource.FromVisual( this );
             Model.ScreenScale = new Point( source.CompositionTarget.TransformToDevice.M11, source.CompositionTarget.TransformToDevice.M22 );
             StartRotation();
+            UpdateLocation(_mouseDriver.CurrentPointerXLocation, _mouseDriver.CurrentPointerYLocation);
         }
 
         private ScreenBound CheckBoundCollision( Point p,  int precision = 0 )
@@ -79,9 +81,11 @@ namespace MouseRadar
 
             ScreenBound collision = ScreenBound.None;
             if( p.X - precision <= current.Bounds.Left ) collision = ScreenBound.Left;
-            if( p.X + precision >= current.Bounds.Right ) collision = ScreenBound.Right;
+            if( p.X + precision >= current.Bounds.Right - 1 ) //X can't be equel to current.Bounds.Right (current.Bounds.Right - 1 max)
+                collision = ScreenBound.Right; 
             if( p.Y - precision <= current.Bounds.Top ) collision = ScreenBound.Top;
-            if( p.Y + precision >= current.Bounds.Bottom ) collision = ScreenBound.Bottom;
+            if( p.Y + precision >= current.Bounds.Bottom - 1)
+                collision = ScreenBound.Bottom; //Y can't be equel to current.Bounds.Bottom (current.Bounds.Bottom - 1 max)
 
             return collision;
         }
@@ -94,6 +98,8 @@ namespace MouseRadar
             Screen curScreen = Screen.FromPoint( new System.Drawing.Point( (int)p.X, (int)p.Y ) );
            
             ScreenBound collision = CheckBoundCollision( p );
+
+            //stuck the cursor on screen bounds on collision 
             switch( collision )
             {
                 default:
@@ -152,17 +158,18 @@ namespace MouseRadar
             if( startRotation ) _timerRotate.Start();
         }
 
-        public void UpdateLocation( object sender, PointerDeviceEventArgs e )
+        void OnMouseLocationChanged( object sender, PointerDeviceEventArgs e )
         {
-            
-            Console.WriteLine("Location  {0}, {1}", e.X, e.Y);
+            UpdateLocation(e.X, e.Y );
+        }
 
-            Left = (e.X /  Model.ScreenScale.X ) - (Model.WindowSize / 2);
-            Top = (e.Y / Model.ScreenScale.Y) - (Model.WindowSize / 2);
+        public void UpdateLocation(int x, int y)
+        {
+            Left = (x / Model.ScreenScale.X) - (Model.WindowSize / 2);
+            Top = (y/ Model.ScreenScale.Y) - (Model.WindowSize / 2);
 
-            Console.WriteLine( "dpix {0}, dpy : {1}", Model.ScreenScale.X, Model.ScreenScale.Y );
-            if( _previousCollision != ScreenBound.None && CheckBoundCollision( new Point(e.X, e.Y) ) == ScreenBound.None ) 
-                FireScreenBoundCollide(ScreenBound.None);
+            if( _previousCollision != ScreenBound.None && CheckBoundCollision( new Point( x, y ) ) == ScreenBound.None )
+                FireScreenBoundCollide( ScreenBound.None );
         }
 
         Point GetTranslation( int x, int y )
@@ -175,8 +182,6 @@ namespace MouseRadar
 
         void FireScreenBoundCollide(ScreenBound bound)
         {
-            Console.WriteLine("Colision : " + bound);
-
             _previousCollision = bound;
             if( ScreenBoundCollide != null ) 
                 ScreenBoundCollide(this, new ScreenBoundCollideEventArgs(bound));
@@ -188,7 +193,7 @@ namespace MouseRadar
         {
             _timerRotate.Stop();
             _timerTranslate.Stop();
-            _mouseDriver.PointerMove -= UpdateLocation;
+            _mouseDriver.PointerMove -= OnMouseLocationChanged;
             this.Close();
         }
 

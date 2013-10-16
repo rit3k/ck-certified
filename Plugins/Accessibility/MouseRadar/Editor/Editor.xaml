@@ -5,10 +5,14 @@
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
             xmlns:cc="clr-namespace:CK.WPF.Controls;assembly=CK.WPF.Controls"
             xmlns:cce="clr-namespace:Microsoft.Windows.Controls;assembly=CK.WPF.Controls"
+            xmlns:r="clr-namespace:MouseRadar.Resources"
             mc:Ignorable="d" 
+            Background="#FFEFEFEF"
             Width="300"
-            Height="300"
-            d:DesignHeight="300" d:DesignWidth="300">
+            Height="340"
+            Topmost="True"
+            Title="{x:Static r:R.RadarConfiguration}"
+            d:DesignHeight="340" d:DesignWidth="300">
     <Window.Resources>
         <Style TargetType="Border" x:Key="Rounded">
             <Setter Property="Background" Value="White"></Setter>
@@ -33,22 +37,28 @@
     </Window.Resources>
     <StackPanel>
         <Border Style="{StaticResource Rounded}" Margin="5">
-            <DockPanel>
-                <TextBlock VerticalAlignment="Center" Margin="0 0 10 0">Radar radius : </TextBlock>
-                <TextBox Text="{Binding RadarSize}" />
+            <DockPanel Margin="0 5 0 5">
+                <TextBlock VerticalAlignment="Center"   Text="{x:Static r:R.RadarRadius}" />
+                <TextBox Text="{Binding RadarSize}" Width="50" HorizontalAlignment="Right"/>
             </DockPanel>
-            
         </Border>
 
         <Border  Style="{StaticResource Rounded}" Margin="5">
             <StackPanel>
-                <DockPanel>
-                    <TextBlock>Radar color</TextBlock>
-                    <cce:ColorPicker SelectedColor="{Binding CircleColor}" />
+                <DockPanel Margin="0 5 0 5">
+                    <TextBlock VerticalAlignment="Center" Text="{x:Static r:R.RadarColor}" />
+                    <cce:ColorPicker SelectedColor="{Binding CircleColor}"  HorizontalAlignment="Right"/>
                 </DockPanel>
-                <DockPanel>
-                    <TextBlock>Arrow color</TextBlock>
-                    <cce:ColorPicker SelectedColor="{Binding ArrowColor}" />
+                <DockPanel  Margin="0 5 0 5">
+                    <TextBlock VerticalAlignment="Center" Text="{x:Static r:R.ArrowColor}" />
+                    <cce:ColorPicker SelectedColor="{Binding ArrowColor}"  HorizontalAlignment="Right"/>
+                </DockPanel>
+                <DockPanel Margin="0 5 0 5">
+                    <TextBlock  DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0 0 10 0" Text="{x:Static r:R.Opacity}" />
+                    <StackPanel>
+                        <Slider Minimum="10" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Center" TickPlacement="BottomRight" Value="{Binding Opacity}"/>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding FormatedOpacity}" />
+                    </StackPanel>
                 </DockPanel>
             </StackPanel>            
         </Border>
@@ -56,24 +66,20 @@
             <StackPanel>
                 
                 <DockPanel>
-                    <TextBlock x:Uid="scroll-speed" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0 0 10 0">Rotation speed :</TextBlock>
+                    <TextBlock x:Uid="scroll-speed" DockPanel.Dock="Left" 
+                               Text="{x:Static r:R.RadarRotationSpeed}" 
+                               VerticalAlignment="Center" 
+                               Margin="0 0 10 0" />
                     <StackPanel>
-                        <Slider Minimum="1" Maximum="10" TickFrequency="1" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Value="{Binding RotationSpeed}"/>
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding FormatedSpeed}" />
+                        <Slider VerticalAlignment="Center" Minimum="1" Maximum="15" TickFrequency="1" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Value="{Binding RotationSpeed}"/>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding FormatedRotationSpeed}" />
                     </StackPanel>
                 </DockPanel>
-                <DockPanel Visibility="{Binding Path=IsTurboStrategy, Converter={StaticResource BoolToVis}}">
-                    <TextBlock  x:Uid="turbo-speed"  DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0 0 10 0">Translation speed :</TextBlock>
+                <DockPanel>
+                    <TextBlock  x:Uid="turbo-speed"  DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0 0 10 0"  Text="{x:Static r:R.RadarTranslationSpeed}" />
                     <StackPanel>
-                        <Slider Minimum="1" Maximum="10" TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Center" TickPlacement="BottomRight" Value="{Binding TranslationSpeed}"/>
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding FormatedTurboSpeed}" />
-                    </StackPanel>
-                </DockPanel>
-                <DockPanel Visibility="{Binding Path=IsTurboStrategy, Converter={StaticResource BoolToVis}}">
-                    <TextBlock  x:Uid="turbo-speed"  DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0 0 10 0">Opacity:</TextBlock>
-                    <StackPanel>
-                        <Slider Minimum="1" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Center" TickPlacement="BottomRight" Value="{Binding Opacity}"/>
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding FormatedTurboSpeed}" />
+                        <Slider Minimum="1" Maximum="15" TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Center" TickPlacement="BottomRight" Value="{Binding TranslationSpeed}"/>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"  Text="{Binding FormatedTranslationSpeed}" />
                     </StackPanel>
                 </DockPanel>
             </StackPanel>

@@ -10,7 +10,7 @@ using CK.Core;
 using System.Windows.Media;
 using CommonServices;
 using KeyScroller;
-using KeyScroller.Resources;
+using MouseRadar.Resources;
 
 namespace MouseRadar.Editor
 {
@@ -24,6 +24,11 @@ namespace MouseRadar.Editor
 
         public IContext Context { get; set; }
         public bool Stopping { get; set; }
+        
+        public string Title
+        {
+            get { return R.Radar; }
+        }
 
         public int RadarSize
         {
@@ -53,9 +58,17 @@ namespace MouseRadar.Editor
             {
                 _config.User["Opacity"] = value ;
                 NotifyOfPropertyChange( "Opacity" );
+                NotifyOfPropertyChange( "FormatedOpacity" );
             }
         }
+        public void Close() 
+        {
 
+        }
+        public string FormatedOpacity
+        {
+            get { return Opacity + "%"; }
+        }
         public int RotationSpeed
         {
             get { return  _config.User.GetOrSet( "RotationSpeed", 1 ); }
@@ -63,6 +76,7 @@ namespace MouseRadar.Editor
             {
                 _config.User["RotationSpeed"] = value;
                 NotifyOfPropertyChange( "RotationSpeed" );
+                NotifyOfPropertyChange( "FormatedRotationSpeed" );
             }
         }
 
@@ -73,12 +87,33 @@ namespace MouseRadar.Editor
             {
                 _config.User["TranslationSpeed"] = value;
                 NotifyOfPropertyChange( "TranslationSpeed" );
+                NotifyOfPropertyChange( "FormatedTranslationSpeed" );
+            }
+        }
+
+        public string FormatedTranslationSpeed
+        {
+            get 
+            {
+                if( TranslationSpeed < 5 ) return R.LowSpeed;
+                if( TranslationSpeed < 10 ) return R.MediumSpeed;
+                else return R.HighSpeed;
+            }
+        }
+
+        public string FormatedRotationSpeed
+        {
+            get
+            {
+                if( RotationSpeed < 5 ) return R.LowSpeed;
+                if( RotationSpeed < 10 ) return R.MediumSpeed;
+                else return R.HighSpeed;
             }
         }
 
         public Color CircleColor
         {
-            get { return _config.Context.GetOrSet( "CircleColor", Color.FromRgb( 0, 0, 0 ) ); }
+            get { return _config.User.GetOrSet( "CircleColor", Color.FromRgb( 0, 0, 0 ) ); }
             set
             {
                 _config.User["CircleColor"] = value;

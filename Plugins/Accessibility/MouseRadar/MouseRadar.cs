@@ -54,7 +54,7 @@ namespace MouseRadar
                     _radar.Model.RadarSize = (int)e.Value * 2;
                     _radar.Height = _radar.Model.WindowSize;
                     _radar.Width = _radar.Model.WindowSize;
-                    
+                    _radar.UpdateLocation( MouseDriver.Service.CurrentPointerXLocation, MouseDriver.Service.CurrentPointerYLocation );
                     break;
                 case "RotationSpeed":
                     _radar.RotationSpeed = (int)e.Value;

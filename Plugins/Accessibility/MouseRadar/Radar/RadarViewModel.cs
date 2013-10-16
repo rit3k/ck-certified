@@ -104,16 +104,19 @@ namespace MouseRadar
             get { return _angle; }
             set
             {
+                //brain workout
                 if( AngleMin > AngleMax )
                 {
+                    //Jump to AngleMin if Angle beetween max and min
                     if( value >= AngleMax && value <= AngleMin) _angle = value - AngleMax + AngleMin;
-                    else if( value >= 360 ) _angle = value - 360;
+                    else if( value >= 360 ) _angle = value - 360; //When angle > 360 restart to 0
                     else _angle = value;
                 }
                 else
                 {
+                    //Back to AngleMin if Angle > max 
                     if( value >= AngleMax ) _angle = value - AngleMax + AngleMin;
-                    else if( value < AngleMin ) _angle = value + AngleMax;
+                    else if( value < AngleMin ) _angle = value + AngleMax;//Jump to AngleMax when Angle < AngleMin
                     else _angle = value;
                 }
                 
