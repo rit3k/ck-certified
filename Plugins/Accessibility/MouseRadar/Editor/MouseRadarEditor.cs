@@ -20,7 +20,7 @@ namespace MouseRadar.Editor
         internal const string PluginIdString = "{275B0E68-B880-463A-96E5-342C8E31E229}";
         Guid PluginGuid = new Guid( PluginIdString );
         const string PluginIdVersion = "1.0.0";
-        const string PluginPublicName = "Radar Editor";
+        const string PluginPublicName = "MouseRadar Editor";
 
         EditorView _view;
         EditorViewModel _editor;

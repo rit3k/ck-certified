@@ -15,40 +15,37 @@ namespace MouseRadar
 {
     [Plugin( MouseRadar.PluginIdString,
            PublicName = MouseRadar.PluginPublicName,
-           Version = MouseRadar.PluginIdVersion,
-           Categories = new string[] { "Visual", "Accessibility" } )]
-    public class MouseRadar :  IPlugin
+           Version = MouseRadar.PluginIdVersion )]
+    public class MouseRadar : IPlugin
     {
         internal const string PluginIdString = "{390AFE83-C5A2-4733-B5BC-5F680ABD0111}";
         Guid PluginGuid = new Guid( PluginIdString );
         const string PluginIdVersion = "1.0.0";
-        const string PluginPublicName = "Radar";
-        
+        const string PluginPublicName = "MouseRadar";
+
         Radar _radar;
-        
+
         [DynamicService( Requires = RunningRequirement.MustExistAndRun )]
         public IService<IPointerDeviceDriver> MouseDriver { get; set; }
 
-        
         [DynamicService( Requires = RunningRequirement.MustExistAndRun )]
         public IService<ITriggerService> ExternalInput { get; set; }
 
-        [ConfigurationAccessor( MouseRadar.PluginIdString )]
         public IPluginConfigAccessor Configuration { get; set; }
 
         #region IPlugin Members
 
         public bool Setup( IPluginSetupInfo info )
-        {   
+        {
             return true;
         }
 
-        void OnConfigChanged(object sender, ConfigChangedEventArgs e)
+        void OnConfigChanged( object sender, ConfigChangedEventArgs e )
         {
             switch( e.Key )
             {
-                case "Opacity" :
-                    _radar.Model.Opacity = (int) e.Value / 100f;
+                case "Opacity":
+                    _radar.Model.Opacity = (int)e.Value / 100f;
                     break;
                 case "RadarSize":
                     _radar.Model.RadarSize = (int)e.Value * 2;
@@ -63,10 +60,10 @@ namespace MouseRadar
                     _radar.TranslationSpeed = (int)e.Value;
                     break;
                 case "ArrowColor":
-                    _radar.Model.SetArrowColor((Color)e.Value);
+                    _radar.Model.SetArrowColor( (Color)e.Value );
                     break;
                 case "CircleColor":
-                    _radar.Model.SetCircleColor((Color)e.Value );
+                    _radar.Model.SetCircleColor( (Color)e.Value );
                     break;
             }
         }
@@ -76,9 +73,9 @@ namespace MouseRadar
             Configuration.ConfigChanged += OnConfigChanged;
             _radar = new Radar( MouseDriver.Service );
 
-            _radar.Model.Opacity = (float) Configuration.User.GetOrSet("Opacity", 100) / 100f;
+            _radar.Model.Opacity = (float)Configuration.User.GetOrSet( "Opacity", 100 ) / 100f;
             _radar.Model.RadarSize = Configuration.User.GetOrSet( "RadarSize", 50 ) * 2;
-            _radar.Model.ArrowColor = new SolidColorBrush(Configuration.User.GetOrSet("ArrowColor", Color.FromRgb(0, 0, 0)));
+            _radar.Model.ArrowColor = new SolidColorBrush( Configuration.User.GetOrSet( "ArrowColor", Color.FromRgb( 0, 0, 0 ) ) );
             _radar.Model.CircleColor = new SolidColorBrush( Configuration.User.GetOrSet( "CircleColor", Color.FromRgb( 0, 0, 0 ) ) );
 
             _radar.RotationSpeed = Configuration.User.GetOrSet( "RotationSpeed", 1 );
@@ -86,11 +83,12 @@ namespace MouseRadar
             ExternalInput.Service.Triggered += TranslateRadar;
             //MouseDriver.Service.PointerButtonUp += TranslateRadar;
 
-            _radar.ScreenBoundCollide += ( o, e ) => {
-                
+            _radar.ScreenBoundCollide += ( o, e ) =>
+            {
+
                 switch( e.ScreenBound )
                 {
-                    case ScreenBound.Left :
+                    case ScreenBound.Left:
                         _radar.Model.AngleMin = 270;
                         _radar.Model.AngleMax = 90;
                         break;
@@ -106,7 +104,7 @@ namespace MouseRadar
                         _radar.Model.AngleMin = 180;
                         _radar.Model.AngleMax = 360;
                         break;
-                    default :
+                    default:
                         _radar.Model.AngleMin = 0;
                         _radar.Model.AngleMax = 360;
                         break;
@@ -117,9 +115,9 @@ namespace MouseRadar
             _radar.Launch();
         }
 
-        void TranslateRadar(object o, EventArgs e)
+        void TranslateRadar( object o, EventArgs e )
         {
-            if(_radar.IsTranslating()) _radar.StopTranslation();
+            if( _radar.IsTranslating() ) _radar.StopTranslation();
             else _radar.StartTranslation();
         }
 

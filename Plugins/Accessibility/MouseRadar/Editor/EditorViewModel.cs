@@ -9,7 +9,6 @@ using CK.Plugin.Config;
 using CK.Core;
 using System.Windows.Media;
 using CommonServices;
-using KeyScroller;
 using MouseRadar.Resources;
 
 namespace MouseRadar.Editor
