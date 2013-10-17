@@ -90,7 +90,7 @@ namespace Host.VM
             {
                 var action = new ConfigItemAction( this.ConfigManager, new SimpleCommand( StartRadarEditor ) );
                 action.ImagePath = "Forward.png";
-                action.DisplayName = "Radar";
+                action.DisplayName = R.RadarConfiguration;
                 this.Items.Add( action );
             }
 

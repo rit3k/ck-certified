@@ -21,7 +21,7 @@
        
         <Ellipse Stroke="{Binding Path=CircleColor}" StrokeThickness="2" Width="{Binding Path=RadarSize}" Height="{Binding Path=RadarSize}">
         </Ellipse>
-        <Polygon Points="14,0 29,10, 14,20" Stroke="Black" Fill="{Binding Path=ArrowColor}"  StrokeThickness="2" Canvas.Left="{Binding Path=PointerPositionX}" Canvas.Top="{Binding Path=PointerPositionY}">
+        <Polygon Points="14,0 29,10, 14,20" Stroke="{Binding Path=ArrowColor}" Fill="{Binding Path=ArrowColor}"  StrokeThickness="2" Canvas.Left="{Binding Path=PointerPositionX}" Canvas.Top="{Binding Path=PointerPositionY}">
             <Polygon.RenderTransform>
                 <RotateTransform CenterX="{Binding Path=RotationOriginX}" CenterY="{Binding Path=RotationOriginY}" Angle="{Binding Path=Angle}" />
             </Polygon.RenderTransform>

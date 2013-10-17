@@ -93,8 +93,9 @@ namespace Host
 
             var mouseRadar = new ConfigFeatureStarter( ConfigManager, _app.PluginRunner, _app.CivikeyHost.Context.ConfigManager.UserConfiguration, new Guid( "{390AFE83-C5A2-4733-B5BC-5F680ABD0111}" ) )
             { 
-                DisplayName = "Radar"
+                DisplayName = R.Radar  
             };
+
             g.Items.Add( skinStarter );
             g.Items.Add( autoClicStarter );
             g.Items.Add( wordPredictionStarter );

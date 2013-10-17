@@ -20,6 +20,7 @@ namespace MouseRadar.Editor
         public EditorViewModel( IPluginConfigAccessor conf )
         {
             _config = conf;
+            base.DisplayName = R.RadarConfiguration;
         }
 
         public IContext Context { get; set; }
